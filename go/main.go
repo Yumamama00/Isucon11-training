@@ -245,6 +245,7 @@ func main() {
 		return
 	}
 	db.SetMaxOpenConns(151)
+	db.SetMaxIdleConns(151)
 	defer db.Close()
 
 	postIsuConditionTargetBaseURL = os.Getenv("POST_ISUCONDITION_TARGET_BASE_URL")
