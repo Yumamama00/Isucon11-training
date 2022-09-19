@@ -1196,7 +1196,7 @@ func postIsuCondition(c echo.Context) error {
 		return c.String(http.StatusNotFound, "not found: isu")
 	}
 
-	insertList := make([]IsuCondition, len(req))
+	insertList := []IsuCondition{}
 	for _, cond := range req {
 		timestamp := time.Unix(cond.Timestamp, 0)
 
@@ -1212,8 +1212,6 @@ func postIsuCondition(c echo.Context) error {
 			Message:    cond.Message,
 		})
 	}
-
-	c.Logger().Debug(insertList)
 
 	_, err = tx.NamedExec(
 		"INSERT INTO `isu_condition`"+
