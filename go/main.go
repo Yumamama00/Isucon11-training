@@ -1213,6 +1213,8 @@ func postIsuCondition(c echo.Context) error {
 		})
 	}
 
+	c.Logger().Debug(insertList)
+
 	_, err = tx.NamedExec(
 		"INSERT INTO `isu_condition`"+
 			"	(`jia_isu_uuid`, `timestamp`, `is_sitting`, `condition`, `message`)"+
