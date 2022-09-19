@@ -1159,7 +1159,7 @@ func getTrend(c echo.Context) error {
 // ISUからのコンディションを受け取る
 func postIsuCondition(c echo.Context) error {
 	// TODO: 一定割合リクエストを落としてしのぐようにしたが、本来は全量さばけるようにすべき
-	dropProbability := 0.8
+	dropProbability := 0.75
 	if rand.Float64() <= dropProbability {
 		// 警告ログ出過ぎなので止める
 		// c.Logger().Warnf("drop post isu condition request")
