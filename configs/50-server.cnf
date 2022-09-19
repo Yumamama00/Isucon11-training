@@ -10,6 +10,14 @@
 # this is only for the mysqld standalone daemon
 [mysqld]
 
+# ISUCON Setting
+slow_query_log         = 1
+# ログ出力先の権限確認
+slow_query_log_file    = /var/log/mysql/mysql-slow.log
+long_query_time        = 0
+
+bind-address            = 0.0.0.0
+
 #
 # * Basic Settings
 #
@@ -25,7 +33,7 @@ lc-messages-dir         = /usr/share/mysql
 
 # Instead of skip-networking the default is now to listen only on
 # localhost which is more compatible and is not less secure.
-bind-address            = 127.0.0.1
+#bind-address            = 127.0.0.1
 
 #
 # * Fine Tuning
@@ -131,4 +139,3 @@ collation-server      = utf8mb4_general_ci
 # If you use the same .cnf file for MariaDB of different versions,
 # use this group for options that older servers don't understand
 [mariadb-10.3]
-
