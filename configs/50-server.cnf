@@ -28,6 +28,8 @@ innodb_io_capacity = 3000
 innodb_io_capacity_max = 3000
 innodb_buffer_pool_size = 2560M
 
+max_connections = 302
+
 #
 # * Basic Settings
 #

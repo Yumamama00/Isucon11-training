@@ -244,8 +244,8 @@ func main() {
 		e.Logger.Fatalf("failed to connect db: %v", err)
 		return
 	}
-	db.SetMaxOpenConns(151)
-	db.SetMaxIdleConns(151)
+	db.SetMaxOpenConns(302)
+	db.SetMaxIdleConns(302)
 	defer db.Close()
 
 	postIsuConditionTargetBaseURL = os.Getenv("POST_ISUCONDITION_TARGET_BASE_URL")
