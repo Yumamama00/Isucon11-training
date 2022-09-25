@@ -18,6 +18,11 @@ CREATE TABLE `isu` (
   PRIMARY KEY(`id`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
 
+ALTER TABLE
+  `isu`
+ADD
+  INDEX `idx_character`(`character`);
+
 CREATE TABLE `isu_condition` (
   `id` bigint DEFAULT 0,
   `jia_isu_uuid` CHAR(36) NOT NULL,
