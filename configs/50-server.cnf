@@ -32,8 +32,7 @@ max_connections = 1024
 
 query_cache_size = 0
 query_cache_type = 0
-thread_cache_size = 1024
-performance_schema = ON
+thread_cache_size = 256
 innodb_log_file_size = 384M
 
 
