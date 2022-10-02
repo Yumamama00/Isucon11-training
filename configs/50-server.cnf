@@ -70,7 +70,7 @@ lc-messages-dir         = /usr/share/mysql
 # * Query Cache Configuration
 #
 #query_cache_limit      = 1M
-query_cache_size        = 16M
+query_cache_size        = 128M
 
 #
 # * Logging and Replication
