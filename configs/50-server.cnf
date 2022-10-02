@@ -30,8 +30,6 @@ innodb_buffer_pool_size = 3072M
 
 max_connections = 1024
 
-query_cache_size = 0
-query_cache_type = 0
 thread_cache_size = 256
 innodb_log_file_size = 384M
 
@@ -72,7 +70,7 @@ lc-messages-dir         = /usr/share/mysql
 # * Query Cache Configuration
 #
 #query_cache_limit      = 1M
-#query_cache_size        = 16M
+query_cache_size        = 16M
 
 #
 # * Logging and Replication
