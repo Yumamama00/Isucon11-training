@@ -35,7 +35,6 @@ query_cache_type = 0
 thread_cache_size = 1024
 performance_schema = ON
 innodb_log_file_size = 384M
-innodb_buffer_pool_instances = 3
 
 
 
