@@ -263,7 +263,7 @@ func main() {
 	for {
 		select {
 		case <-ticker.C:
-			insertIsuConditionList(e)
+			insertIsuConditionList()
 		}
 	}
 }
@@ -1148,9 +1148,10 @@ func getTrend(c echo.Context) error {
 // InsertするIsuConditionを保持するスライス
 var insertConditionList = []IsuCondition{}
 
-func insertIsuConditionList(e echo.Echo) {
+func insertIsuConditionList() {
 
-	e.Logger.Info("ROOP")
+	log.Info("ROOP")
+	log.Info(len(insertConditionList))
 
 	if len(insertConditionList) > 0 {
 		db.NamedExec(
