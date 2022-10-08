@@ -263,6 +263,7 @@ func main() {
 	for {
 		select {
 		case <-ticker.C:
+			e.Logger.Info("TEST")
 			insertIsuConditionList()
 		}
 	}
