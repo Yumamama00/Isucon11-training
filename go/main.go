@@ -271,14 +271,15 @@ func getUserIDFromSession(c echo.Context) (string, int, error) {
 	if err != nil {
 		return "", http.StatusInternalServerError, fmt.Errorf("failed to get session: %v", err)
 	}
+
 	_jiaUserID, ok := session.Values["jia_user_id"]
 	if !ok {
 		return "", http.StatusUnauthorized, fmt.Errorf("no session")
 	}
 
 	jiaUserID := _jiaUserID.(string)
-	var count int
 
+	var count int
 	err = db.Get(&count, "SELECT COUNT(*) FROM `user` WHERE `jia_user_id` = ? LIMIT 1",
 		jiaUserID)
 	if err != nil {
@@ -453,15 +454,6 @@ func getIsuList(c echo.Context) error {
 		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	/*
-		tx, err := db.Beginx()
-		if err != nil {
-			c.Logger().Errorf("db error: %v", err)
-			return c.NoContent(http.StatusInternalServerError)
-		}
-		defer tx.Rollback()
-	*/
-
 	isuList := []Isu{}
 	err = db.Select(
 		&isuList,
@@ -512,16 +504,9 @@ func getIsuList(c echo.Context) error {
 			Name:               isu.Name,
 			Character:          isu.Character,
 			LatestIsuCondition: formattedCondition}
+
 		responseList = append(responseList, res)
 	}
-
-	/*
-		err = tx.Commit()
-		if err != nil {
-			c.Logger().Errorf("db error: %v", err)
-			return c.NoContent(http.StatusInternalServerError)
-		}
-	*/
 
 	return c.JSON(http.StatusOK, responseList)
 }
@@ -744,15 +729,6 @@ func getIsuGraph(c echo.Context) error {
 	}
 	date := time.Unix(datetimeInt64, 0).Truncate(time.Hour)
 
-	/*
-		tx, err := db.Beginx()
-		if err != nil {
-			c.Logger().Errorf("db error: %v", err)
-			return c.NoContent(http.StatusInternalServerError)
-		}
-		defer tx.Rollback()
-	*/
-
 	var count int
 	err = db.Get(&count, "SELECT COUNT(*) FROM `isu` WHERE `jia_user_id` = ? AND `jia_isu_uuid` = ? LIMIT 1",
 		jiaUserID, jiaIsuUUID)
@@ -760,6 +736,7 @@ func getIsuGraph(c echo.Context) error {
 		c.Logger().Errorf("db error: %v", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
+
 	if count == 0 {
 		return c.String(http.StatusNotFound, "not found: isu")
 	}
@@ -769,14 +746,6 @@ func getIsuGraph(c echo.Context) error {
 		c.Logger().Error(err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
-
-	/*
-		err = tx.Commit()
-		if err != nil {
-			c.Logger().Errorf("db error: %v", err)
-			return c.NoContent(http.StatusInternalServerError)
-		}
-	*/
 
 	return c.JSON(http.StatusOK, res)
 }
@@ -1131,6 +1100,7 @@ func getTrend(c echo.Context) error {
 					ID:        isu.ID,
 					Timestamp: isuLastCondition.Timestamp.Unix(),
 				}
+
 				switch conditionLevel {
 				case "info":
 					characterInfoIsuConditions = append(characterInfoIsuConditions, &trendCondition)
@@ -1152,6 +1122,7 @@ func getTrend(c echo.Context) error {
 		sort.Slice(characterCriticalIsuConditions, func(i, j int) bool {
 			return characterCriticalIsuConditions[i].Timestamp > characterCriticalIsuConditions[j].Timestamp
 		})
+
 		res = append(res,
 			TrendResponse{
 				Character: character.Character,
@@ -1187,15 +1158,6 @@ func postIsuCondition(c echo.Context) error {
 	} else if len(req) == 0 {
 		return c.String(http.StatusBadRequest, "bad request body")
 	}
-
-	/*
-		tx, err := db.Beginx()
-		if err != nil {
-			c.Logger().Errorf("db error: %v", err)
-			return c.NoContent(http.StatusInternalServerError)
-		}
-		defer tx.Rollback()
-	*/
 
 	var count int
 	err = db.Get(&count, "SELECT COUNT(*) FROM `isu` WHERE `jia_isu_uuid` = ? LIMIT 1", jiaIsuUUID)
@@ -1234,14 +1196,6 @@ func postIsuCondition(c echo.Context) error {
 		c.Logger().Errorf("db error: %v", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
-
-	/*
-		err = tx.Commit()
-		if err != nil {
-			c.Logger().Errorf("db error: %v", err)
-			return c.NoContent(http.StatusInternalServerError)
-		}
-	*/
 
 	return c.NoContent(http.StatusAccepted)
 }
