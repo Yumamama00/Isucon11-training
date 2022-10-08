@@ -257,16 +257,6 @@ func main() {
 
 	serverPort := fmt.Sprintf(":%v", getEnv("SERVER_APP_PORT", "3000"))
 	e.Logger.Fatal(e.Start(serverPort))
-
-	ticker := time.NewTicker(time.Millisecond * 100)
-	defer ticker.Stop()
-	for {
-		select {
-		case <-ticker.C:
-			e.Logger.Error("TEST")
-			insertIsuConditionList()
-		}
-	}
 }
 
 func getSession(r *http.Request) (*sessions.Session, error) {
@@ -1146,26 +1136,6 @@ func getTrend(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-// InsertするIsuConditionを保持するスライス
-var insertConditionList = []IsuCondition{}
-
-func insertIsuConditionList() {
-
-	log.Info("ROOP")
-	log.Info(len(insertConditionList))
-
-	if len(insertConditionList) > 0 {
-		db.NamedExec(
-			"INSERT INTO `isu_condition`"+
-				"	(`jia_isu_uuid`, `timestamp`, `is_sitting`, `condition`, `message`)"+
-				"	VALUES (:jia_isu_uuid, :timestamp, :is_sitting, :condition, :message)",
-			insertConditionList)
-
-		insertConditionList = []IsuCondition{}
-	}
-
-}
-
 // POST /api/condition/:jia_isu_uuid
 // ISUからのコンディションを受け取る
 func postIsuCondition(c echo.Context) error {
@@ -1200,6 +1170,8 @@ func postIsuCondition(c echo.Context) error {
 		return c.String(http.StatusNotFound, "not found: isu")
 	}
 
+	insertConditionList := []IsuCondition{}
+
 	for _, cond := range req {
 		timestamp := time.Unix(cond.Timestamp, 0)
 
@@ -1214,6 +1186,17 @@ func postIsuCondition(c echo.Context) error {
 			Condition:  cond.Condition,
 			Message:    cond.Message,
 		})
+	}
+
+	_, err = db.NamedExec(
+		"INSERT INTO `isu_condition`"+
+			"	(`jia_isu_uuid`, `timestamp`, `is_sitting`, `condition`, `message`)"+
+			"	VALUES (:jia_isu_uuid, :timestamp, :is_sitting, :condition, :message)",
+		insertConditionList)
+
+	if err != nil {
+		c.Logger().Errorf("db error: %v", err)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 
 	return c.NoContent(http.StatusAccepted)
